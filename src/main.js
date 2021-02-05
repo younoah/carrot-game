@@ -1,9 +1,15 @@
 'use strict';
 
+const carrotSound = new Audio('./sound/carrot_pull.mp3');
+const bugSound = new Audio('./sound/bug_pull.mp3');
+const alertSound = new Audio('./sound/alert.mp3');
+const winSound = new Audio('./sound/game_win.mp3');
+const bgSound = new Audio('./sound/bg.mp3');
+
 const CARROT_SIZE = 80;
-const CARROT_COUNT = 20;
+const CARROT_COUNT = 3;
 const BUG_COUNT = 20;
-const GAME_DURATION = 5;
+const GAME_DURATION_SEC = 3;
 
 const $field = document.querySelector('.game__field');
 const $fieldRect = $field.getBoundingClientRect();
@@ -18,16 +24,23 @@ let started = false;
 let score = 0;
 let timer = undefined;
 
+$field.addEventListener('click', onFieldClick);
 $gameBtn.addEventListener('click', () => {
   started ? stopGame() : startGame();
+});
+$popUpRefresh.addEventListener('click', () => {
+  startGame();
+  hidePopUp();
 });
 
 function startGame() {
   started = true;
+  score = 0;
   initGame();
   showStopButton();
   showTimerAndScore();
   startGameTimer();
+  playSound(bgSound);
 }
 
 function showStopButton() {
@@ -42,11 +55,12 @@ function showTimerAndScore() {
 }
 
 function startGameTimer() {
-  let remainingTimeSec = GAME_DURATION;
+  let remainingTimeSec = GAME_DURATION_SEC;
   updateTimerText(remainingTimeSec);
   timer = setInterval(() => {
     if (remainingTimeSec <= 0) {
       clearInterval(timer);
+      finishGame(CARROT_COUNT === score);
       return;
     }
     updateTimerText(--remainingTimeSec);
@@ -62,7 +76,7 @@ function updateTimerText(time) {
 function stopGameTimer() {}
 
 function updateScoreBoard() {
-  this.$gameScore.innerText = CARROT_COUNT - score;
+  $gameScore.innerText = CARROT_COUNT - score;
 }
 
 function stopGame() {
@@ -70,10 +84,19 @@ function stopGame() {
   stopGameTimer();
   hideGameButton();
   showPopUpWithText('Replay?');
+  stopSound(bgSound);
 }
 
 function stopGameTimer() {
   clearInterval(timer);
+}
+
+function finishGame(win) {
+  started = false;
+  stopGameTimer();
+  hideGameButton();
+  showPopUpWithText(win ? 'YOU WIN!' : 'YOU LOST');
+  stopSound(bgSound);
 }
 
 function hideGameButton() {
@@ -85,11 +108,36 @@ function showPopUpWithText(text) {
   $popUp.classList.remove('pop-up--hide');
 }
 
+function hidePopUp() {
+  $popUp.classList.add('pop-up--hide');
+}
+
 function initGame() {
   $field.innerHTML = '';
   $gameScore.innerHTML = CARROT_COUNT;
   addItem('carrot', CARROT_COUNT, 'img/carrot.png');
   addItem('bug', BUG_COUNT, 'img/bug.png');
+}
+
+function onFieldClick(event) {
+  if (!started) {
+    return;
+  }
+  const target = event.target;
+  if (target.matches('.carrot')) {
+    target.remove();
+    score++;
+    playSound(carrotSound);
+    updateScoreBoard();
+    if (score === CARROT_COUNT) {
+      playSound(winSound);
+      finishGame(true);
+    }
+  } else if (target.matches('.bug')) {
+    target.remove();
+    playSound(bugSound);
+    finishGame(false);
+  }
 }
 
 function addItem(className, count, imgPath) {
@@ -111,4 +159,13 @@ function addItem(className, count, imgPath) {
 }
 function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
+}
+
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play();
+}
+
+function stopSound(sound) {
+  sound.pause();
 }
