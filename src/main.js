@@ -2,7 +2,7 @@
 
 const carrotSound = new Audio('./sound/carrot_pull.mp3');
 const bugSound = new Audio('./sound/bug_pull.mp3');
-const alertSound = new Audio('./sound/alert.mp3');
+const alertSound = new Audio('./sound/alert.wav');
 const winSound = new Audio('./sound/game_win.mp3');
 const bgSound = new Audio('./sound/bg.mp3');
 
@@ -47,6 +47,7 @@ function showStopButton() {
   const icon = $gameBtn.querySelector('.fas');
   icon.classList.add('fa-pause');
   icon.classList.remove('fa-play');
+  $gameBtn.style.visibility = 'visible';
 }
 
 function showTimerAndScore() {
@@ -73,7 +74,9 @@ function updateTimerText(time) {
   $gameTimer.innerText = `${minutes} : ${sconds}`;
 }
 
-function stopGameTimer() {}
+function stopGameTimer() {
+  clearInterval(timer);
+}
 
 function updateScoreBoard() {
   $gameScore.innerText = CARROT_COUNT - score;
@@ -84,11 +87,8 @@ function stopGame() {
   stopGameTimer();
   hideGameButton();
   showPopUpWithText('Replay?');
+  playSound(alertSound);
   stopSound(bgSound);
-}
-
-function stopGameTimer() {
-  clearInterval(timer);
 }
 
 function finishGame(win) {
@@ -96,6 +96,7 @@ function finishGame(win) {
   stopGameTimer();
   hideGameButton();
   showPopUpWithText(win ? 'YOU WIN!' : 'YOU LOST');
+  playSound(bugSound);
   stopSound(bgSound);
 }
 
