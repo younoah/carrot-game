@@ -98,7 +98,7 @@ function stopGame() {
   hideGameButton();
   gamePopUp.showWithText('Replay?');
   sound.playAlert();
-  stopSound(bgSound);
+  sound.stopBackground();
 }
 
 function finishGame(win) {
