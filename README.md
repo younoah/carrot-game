@@ -35,7 +35,7 @@ https://younoah.github.io/carrot-game/
 
 ### 게임 패배
 
-![game-lose](/Users/uno/Desktop/game-lose.png)
+![game-lose](https://user-images.githubusercontent.com/41064875/107120211-9eff9100-68cf-11eb-9b7e-2681c14f72e6.png)
 
 - 벌레를 선택시 게임 패배
 - 타임오버시 게임 패배
@@ -45,7 +45,7 @@ https://younoah.github.io/carrot-game/
 
 ### 게임정지 버튼 클릭시 화면
 
-![game-lose](https://user-images.githubusercontent.com/41064875/107120211-9eff9100-68cf-11eb-9b7e-2681c14f72e6.png)
+![game-stop](https://user-images.githubusercontent.com/41064875/107120208-9c9d3700-68cf-11eb-802a-c37661c9d571.png)
 
 - 리플레이 버튼을 클릭하면 게임 재시작
 
